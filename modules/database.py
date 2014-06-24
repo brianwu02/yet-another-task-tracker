@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship, backref, mapper, scoped_session, sessio
 from datetime import datetime, date
 
 
-engine = create_engine('postgresql+psycopg2://test:password@localhost/testdb',
+engine = create_engine('postgresql+psycopg2://test:password@192.168.1.24/testdb',
         convert_unicode=True, echo=False)
 
 db_session = scoped_session(sessionmaker(

@@ -1,16 +1,17 @@
-from sqlalchemy import Column, Integer, String, Text
-from module.database import Base
+from sqlalchemy import Column, Integer, String, Text, DateTime
+from database import Base
+from datetime import datetime, date
 
 class Note(Base):
-    __tablename == 'notes'
+    __tablename__ = 'notes'
     id = Column(Integer, primary_key=True)
-    data = Column(Text, nullable=False)
+    note = Column(Text, nullable=False)
     timestamp = Column(DateTime, nullable=False)
 
-    def __init__(self, data=None, timestamp=None):
-        self.data = data 
+    def __init__(self, note=None, timestamp=None):
+        self.note = note
         self.timestamp = timestamp
 
     def __repr__(self):
-        return "<Note(id='%s', data='%s', timestamp='%s')>" % (
-                self.id, self.data, self.timestamp) 
+        return "<Note(id='%s', note='%s', timestamp='%s')>" % (
+                self.id, self.note, self.timestamp) 
