@@ -1,15 +1,36 @@
 from flask import Flask, jsonify, abort, request, make_response, url_for
 from flask.ext.restful import Api, Resource, reqparse, fields, marshal
 from flask.ext.httpauth import HTTPBasicAuth
+from flask_sqlalchemy import SQLAlchemy
 
 from modules.database import db_session
-from modules.models import Note
+from modules.models import Note, Base
 
 from datetime import datetime # just to get it working.
 
-app = Flask(__name__, static_url_path = '')
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://test:password@192.168.1.24/testdb'
+db = SQLAlchemy(app)
+
 api = Api(app)
 auth = HTTPBasicAuth()
+
+@app.before_first_request 
+def setup():
+    Base.metadata.drop_all(bind=db.engine)
+    Base.metadata.create_all(bind=db.engine)
+
+@app.route('/add')
+def add():
+    note = Note('some data', datetime.now())
+    db.session.add(note)
+    db.session.commit()
+
+@app.route('/')
+def root():
+    notes = db.session.query(Note).all()
+    return u"<br>".join([u"{0}: {1}".format(note.note, note.timestamp) for note in notes])
+
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
