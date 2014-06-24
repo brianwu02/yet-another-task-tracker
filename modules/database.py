@@ -23,16 +23,8 @@ def init_db():
     """
     metadata.create_all(bind=engine)
 
-class Note(Base):
-    __tablename__ = 'notes'
 
-    id = Column(Integer, primary_key=True)
-    data = Column(Text, nullable=False)
-    timestamp = Column(DateTime, nullable=False)
 
-    def __repr__(self):
-        return "<Note(id='%s', data='%s', timestamp='%s')>" % (
-                self.id, self.data, self.timestamp)
 
 # not needed.
 #
