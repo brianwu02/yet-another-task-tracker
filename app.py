@@ -8,6 +8,8 @@ from modules.models import Note, Base
 
 from datetime import datetime # just to get it working.
 
+from modules.database import init_db
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://test:password@192.168.1.24/testdb'
 db = SQLAlchemy(app)
@@ -17,6 +19,7 @@ auth = HTTPBasicAuth()
 
 @app.before_first_request 
 def setup():
+    print("This frs")
     Base.metadata.drop_all(bind=db.engine)
     Base.metadata.create_all(bind=db.engine)
 
@@ -25,6 +28,7 @@ def add():
     note = Note('some data', datetime.now())
     db.session.add(note)
     db.session.commit()
+    return note
 
 @app.route('/')
 def root():
@@ -34,6 +38,8 @@ def root():
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
+    print("this is being called")
+    db.session.remove()
     db_session.remove()
 
 
